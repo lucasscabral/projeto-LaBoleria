@@ -17,4 +17,4 @@ const orderValidate = joi.object({
     quantity: joi.number().min(0).max(5).required()
 })
 
-export default { cakeValidate, clientValidate, orderValidate };
+export { cakeValidate, clientValidate, orderValidate };

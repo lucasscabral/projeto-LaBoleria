@@ -16,12 +16,49 @@ export async function checksExistenceOfCake(clientId) {
 
 }
 
-export async function insertOrders(clientId, cakeId, quantity, createdAt) {
-    const { rows: cakes } = await connection.query(`SELECT * FROM cakes WHERE id = $1;`, [cakeId])
-
-    let totalPay = cakes[0].price * quantity;
+export async function insertOrders(clientId, cakeId, quantity, totalPrice) {
     let date = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-    await connection.query(`INSERT INTO orders ("clientId","cakeId",quantity,"createdAt","totalPrice") VALUES ($1,$2,$3,$4,$5);`, [clientId, cakeId, quantity, date, totalPay]);
+    await connection.query(`INSERT INTO orders ("clientId","cakeId",quantity,"createdAt","totalPrice") VALUES ($1,$2,$3,$4,$5);`, [clientId, cakeId, quantity, date, totalPrice]);
 
+}
+
+export async function getOrders() {
+    const { rows } = await connection.query(`SELECT json_build_object('id',clients.id,'name',clients.name,'address',clients.address,'phone',clients.phone) AS client,
+    json_build_object('id',cakes.id,'name',cakes.name,'image',cakes.image,'price',cakes.price,'description',cakes.description) AS cake,
+    orders.id AS "orderId", orders.quantity , orders."createdAt" , orders."totalPrice"  
+    FROM orders
+    JOIN clients 
+    ON clients.id = orders."clientId"
+    JOIN cakes
+    ON cakes.id = orders."cakeId";`);
+
+    return rows;
+}
+
+export async function getOrdersByDate(dateOrders) {
+    const { rows } = await connection.query(`SELECT json_build_object('id',clients.id,'name',clients.name,'address',clients.address,'phone',clients.phone) AS client,
+    json_build_object('id',cakes.id,'name',cakes.name,'image',cakes.image,'price',cakes.price,'description',cakes.description) AS cake,
+    orders.id AS "orderId", orders.quantity , orders."createdAt" , orders."totalPrice"  
+    FROM orders
+    JOIN clients 
+    ON clients.id = orders."clientId"
+    JOIN cakes
+    ON cakes.id = orders."cakeId";`);
+
+    return rows;
+}
+
+export async function getOrdersById(id) {
+    const { rows } = await connection.query(`SELECT json_build_object('id',clients.id,'name',clients.name,'address',clients.address,'phone',clients.phone) AS client,
+    json_build_object('id',cakes.id,'name',cakes.name,'image',cakes.image,'price',cakes.price,'description',cakes.description) AS cake,
+    orders.id AS "orderId", orders.quantity , orders."createdAt" , orders."totalPrice"  
+    FROM orders
+    JOIN clients 
+    ON clients.id = orders."clientId"
+    JOIN cakes
+    ON cakes.id = orders."cakeId"
+    WHERE orders.id = $1;`, [id]);
+
+    return rows;
 }

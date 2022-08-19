@@ -6,10 +6,8 @@ export async function createClient(req, res) {
         await insertClient(name, address, phone);
         res.sendStatus(201);
     } catch (error) {
-
         res.sendStatus(500);
     }
-
 }
 
 export async function ordersByClient(req, res) {
@@ -23,8 +21,6 @@ export async function ordersByClient(req, res) {
         const ordersClient = await getOrdersByClient(id);
         res.send(ordersClient);
     } catch (error) {
-
         res.sendStatus(500);
     }
-
 }

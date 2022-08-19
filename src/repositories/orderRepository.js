@@ -38,19 +38,6 @@ export async function getOrders() {
     return rows;
 }
 
-// export async function getOrdersByDate(dateOrders) {
-//     const { rows } = await connection.query(`SELECT json_build_object('id',clients.id,'name',clients.name,'address',clients.address,'phone',clients.phone) AS client,
-//     json_build_object('id',cakes.id,'name',cakes.name,'image',cakes.image,'price',cakes.price,'description',cakes.description) AS cake,
-//     orders.id AS "orderId", orders.quantity , orders."createdAt" , orders."totalPrice"  
-//     FROM orders
-//     JOIN clients 
-//     ON clients.id = orders."clientId"
-//     JOIN cakes
-//     ON cakes.id = orders."cakeId";`);
-
-//     return rows;
-// }
-
 export async function getOrdersById(id) {
     const { rows } = await connection.query(`SELECT json_build_object('id',clients.id,'name',clients.name,'address',clients.address,'phone',clients.phone) AS client,
     json_build_object('id',cakes.id,'name',cakes.name,'image',cakes.image,'price',cakes.price,'description',cakes.description,'flavour',flavours.name) AS cake,
